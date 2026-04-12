@@ -24,32 +24,53 @@ const startNotificationWorker = async () => {
 
     try {
 
+      // Parse RabbitMQ message
       const data = JSON.parse(msg.content.toString());
 
       console.log("Notification Event:", data);
 
+      let userId = data.userId;
+
+      // Case 1: if userId is an object
+      if (typeof userId === "object" && userId._id) {
+        userId = userId._id.toString();
+      }
+
+      // Case 2: if userId is a string containing ObjectId(...)
+      if (typeof userId === "string" && userId.includes("ObjectId")) {
+        const match = userId.match(/ObjectId\('([a-f0-9]+)'\)/);
+        if (match) {
+          userId = match[1];
+        }
+      }
+
+      // Save notification in PostgreSQL
       await pool.query(
         "INSERT INTO notifications(user_id, message) VALUES($1,$2)",
-        [data.userId, data.message]
+        [userId, data.message]
       );
 
+      // Send Email
       try {
         await sendEmail(data);
       } catch (err) {
         console.log("Email failed but continuing...");
       }
 
+      // Send WebSocket Notification
       sendSocketNotification({
-        userId: data.userId,
+        userId: userId,
         message: data.message
       });
 
+      // Acknowledge RabbitMQ message
       channel.ack(msg);
 
     } catch (err) {
 
       console.log("Notification error:", err);
 
+      // Reject message without requeue
       channel.nack(msg, false, false);
 
     }

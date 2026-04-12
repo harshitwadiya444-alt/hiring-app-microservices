@@ -9,21 +9,29 @@ const ForgotPassword = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
 
+    console.log("FORM SUBMITTED");
+
     try {
       const res = await axios.post(
         `${USER_API_ENDPOINT}/forgot-password`,
         { email }
       );
 
+      console.log(res.data);
       toast.success(res.data.message);
+
+      // 👉 Automatically open reset password page
+      window.location.href = res.data.resetLink;
+
     } catch (error) {
+      console.log(error);
       toast.error(error.response?.data?.message || "Error");
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0f172a] via-[#312e81] to-[#6d28d9] px-4">
-
+      
       <form
         onSubmit={submitHandler}
         className="w-full max-w-md bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-8 shadow-2xl"
@@ -44,6 +52,7 @@ const ForgotPassword = () => {
             className="w-full p-3 rounded-lg bg-white/20 text-white placeholder-gray-300 outline-none"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            required
           />
         </div>
 

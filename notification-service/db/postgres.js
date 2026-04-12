@@ -4,9 +4,9 @@ const { Pool } = pkg;
 
 const pool = new Pool({
   user: "postgres",
-  host: "postgres",
+  host: "localhost",   // FIX HERE
   database: "notifications",
-  password: "postgres",
+  password: "#@Harsh123",
   port: 5432,
   max: 10
 });

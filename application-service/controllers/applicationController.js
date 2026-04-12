@@ -1,6 +1,7 @@
 import Application from "../models/application.js";
 import Job from "../models/jobModel.js";
 import User from "../models/user.js";
+import Company from "../models/company.js";  
 import { publishApplyJob } from "../services/applyProducer.js";
 import updateStatusCentral from "../utils/statusManager.js"
 import mongoose from "mongoose";
