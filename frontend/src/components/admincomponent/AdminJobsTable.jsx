@@ -63,27 +63,23 @@ const AdminJobsTable = () => {
                   <MoreHorizontal />
                 </PopoverTrigger>
 
-                <PopoverContent className="w-32">
-                  <div
-                    onClick={() =>
-                      navigate(`/recruiter/dashboard/${job._id}`)
-                    }
-                    className="flex gap-2 cursor-pointer"
-                  >
-                    <Eye className="w-4" />
-                    Applicants
-                  </div>
+               <PopoverContent className="w-40 p-2 bg-white/95 backdrop-blur-md border border-gray-200 shadow-xl rounded-xl">
+  <div
+    onClick={() => navigate(`/recruiter/dashboard/${job._id}`)}
+    className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-indigo-50 hover:text-indigo-600 transition-all duration-200 cursor-pointer group"
+  >
+    <Eye className="w-4 h-4 text-gray-500 group-hover:text-indigo-600" />
+    <span className="text-sm font-medium">Applicants</span>
+  </div>
 
-                  <div
-                    onClick={() =>
-                      navigate(`/admin/jobs/update/${job._id}`)
-                    }
-                    className="flex gap-2 cursor-pointer mt-2"
-                  >
-                    <Edit2 className="w-4" />
-                    Edit
-                  </div>
-                </PopoverContent>
+  <div
+    onClick={() => navigate(`/admin/jobs/update/${job._id}`)}
+    className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-purple-50 hover:text-purple-600 transition-all duration-200 cursor-pointer group mt-1"
+  >
+    <Edit2 className="w-4 h-4 text-gray-500 group-hover:text-purple-600" />
+    <span className="text-sm font-medium">Edit Job</span>
+  </div>
+</PopoverContent>
               </Popover>
             </TableCell>
           </TableRow>

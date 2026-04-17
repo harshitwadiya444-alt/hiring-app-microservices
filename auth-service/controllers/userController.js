@@ -110,12 +110,12 @@ export const login = async (req, res) => {
       });
     }
 
-    if (user.role !== role) {
-      return res.status(403).json({
-        message: "You don't have the necessary role to access this resource",
-        success: false,
-      });
-    }
+if (user.role !== role) {
+  return res.status(403).json({
+    message: `You selected ${role} login but your account is ${user.role}. Please choose the correct role.`,
+    success: false,
+  });
+}
 
     const tokenData = {
       userId: user._id,

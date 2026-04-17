@@ -11,33 +11,30 @@ const useGetAllJobs = () => {
 const { searchedQuery } = useSelector((store) => store.jobs);
 
   useEffect(() => {
-    const fetchAllJobs = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const res = await axios.get(
-          `${JOB_API_ENDPOINT}/get?keyword=${searchedQuery}`,
-          {
-            withCredentials: true,
-          }
-        );
-        console.log("API Response:", res.data);
-        if (res.data.status) {
-          // Updated success check
-          dispatch(setAllJobs(res.data.jobs));
-        } else {
-          setError("Failed to fetch jobs.");
-        }
-      } catch (error) {
-        console.error("Fetch Error:", error);
-        setError(error.message || "An error occurred.");
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchAllJobs = async () => {
+    setLoading(true);
+    setError(null);
 
-    fetchAllJobs();
-  }, [dispatch]);
+    try {
+      const res = await axios.get(
+        `${JOB_API_ENDPOINT}/get?keyword=${searchedQuery}`
+      );
+
+      console.log("API Response:", res.data);
+
+      if (res.data.status) {
+        dispatch(setAllJobs(res.data.jobs));
+      }
+    } catch (error) {
+      console.error("Fetch Error:", error);
+      setError(error.message || "An error occurred.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchAllJobs();
+}, [dispatch, searchedQuery]);
 
   return { loading, error };
 };

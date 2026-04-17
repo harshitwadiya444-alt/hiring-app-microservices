@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Label } from "../ui/label";
-import { Input } from "../ui/input";
-import { RadioGroup } from "../ui/radio-group";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "sonner";
@@ -10,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setLoading, setUser } from "@/redux/authSlice";
 
 const Login = () => {
+
   const [input, setInput] = useState({
     email: "",
     password: "",
@@ -27,7 +26,13 @@ const Login = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
 
+    if (!input.role) {
+      toast.error("Please select Student or Recruiter");
+      return;
+    }
+
     try {
+
       dispatch(setLoading(true));
 
       const res = await axios.post(
@@ -44,27 +49,33 @@ const Login = () => {
         toast.success(res.data.message);
         navigate("/");
       }
+
     } catch (error) {
+
       toast.error(
         error.response?.data?.message || "Login failed"
       );
+
     } finally {
+
       dispatch(setLoading(false));
+
     }
   };
 
   useEffect(() => {
     if (user) navigate("/");
-  }, [user, navigate]);
+  }, [user]);
 
   return (
+
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0f172a] via-[#312e81] to-[#6d28d9] px-4">
 
       <form
         onSubmit={submitHandler}
         className="w-full max-w-md bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-8 shadow-2xl"
       >
-        {/* HEADING */}
+
         <h1 className="text-3xl font-bold text-center text-white mb-1">
           Welcome Back
         </h1>
@@ -74,21 +85,28 @@ const Login = () => {
         </p>
 
         {/* EMAIL */}
+
         <div className="mb-4">
+
           <Label className="text-gray-100">Email</Label>
-          <Input
+
+          <input
             type="email"
             name="email"
             value={input.email}
             onChange={changeEventHandler}
             placeholder="johndoe@gmail.com"
-            className="glass-input"
+            className="w-full mt-1 px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 backdrop-blur-md"
           />
+
         </div>
 
         {/* PASSWORD */}
+
         <div className="mb-4">
+
           <div className="flex justify-between items-center mb-1">
+
             <Label className="text-gray-100">Password</Label>
 
             <Link
@@ -97,66 +115,85 @@ const Login = () => {
             >
               Forgot Password?
             </Link>
+
           </div>
 
-          <Input
+          <input
             type="password"
             name="password"
             value={input.password}
             onChange={changeEventHandler}
             placeholder="********"
-            className="glass-input"
+            className="w-full mt-1 px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 backdrop-blur-md"
           />
+
         </div>
 
         {/* ROLE */}
-        <RadioGroup className="flex gap-6 my-5">
-          <label className="flex items-center gap-2 text-gray-200">
+
+        <div className="flex gap-6 my-5 text-gray-200">
+
+          <label className="flex items-center gap-2">
+
             <input
               type="radio"
               name="role"
               value="Student"
               checked={input.role === "Student"}
               onChange={changeEventHandler}
-              className="accent-indigo-500 scale-110"
+              className="accent-indigo-500"
             />
+
             Student
+
           </label>
 
-          <label className="flex items-center gap-2 text-gray-200">
+          <label className="flex items-center gap-2">
+
             <input
               type="radio"
               name="role"
               value="Recruiter"
               checked={input.role === "Recruiter"}
               onChange={changeEventHandler}
-              className="accent-indigo-500 scale-110"
+              className="accent-indigo-500"
             />
+
             Recruiter
+
           </label>
-        </RadioGroup>
+
+        </div>
 
         {/* BUTTON */}
+
         <button
           disabled={loading}
           type="submit"
           className="w-full py-3 mt-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl transition-all"
         >
+
           {loading ? "Logging in..." : "Login"}
+
         </button>
 
-        {/* FOOTER */}
         <p className="text-center text-gray-300 mt-5">
+
           Don’t have an account?{" "}
+
           <Link
             to="/register"
             className="text-indigo-400 hover:underline"
           >
             Register
           </Link>
+
         </p>
+
       </form>
+
     </div>
+
   );
 };
 

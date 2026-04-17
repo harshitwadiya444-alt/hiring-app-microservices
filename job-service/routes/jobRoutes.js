@@ -14,15 +14,15 @@ const app = express();
 app.post("/post", authenticateToken, postJob);
 
 // UPDATE job ✅
-app.put("/update/:id", authenticateToken, updateJob);
+app.put("/update/:id", updateJob);
 
 // GET all jobs
-app.get("/get", authenticateToken, getAllJobs);
+app.get("/get", getAllJobs);
 
 // GET admin jobs
 app.get("/getadminjobs", authenticateToken, getAdminJobs);
 
 // GET job by id
-app.get("/get/:id", authenticateToken, getJobById);
+app.get("/get/:id", getJobById);
 
 export default app;

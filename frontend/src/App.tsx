@@ -12,6 +12,7 @@ import Login from "./components/component_lite/Login";
 import Home from "./components/component_lite/Home";
 import Jobs from "./components/component_lite/Jobs";
 import Browse from "./components/component_lite/Browse";
+import About from "./components/component_lite/About";
 
 import ProtectedRoute from "./components/admincomponent/ProtectedRoute";
 import Companies from "./components/admincomponent/Companies";
@@ -25,13 +26,12 @@ import Profile from "./components/component_lite/Profile";
 import RecruiterDashboardWrapper from "./components/component_lite/RecruiterDashboardWrapper";
 import UpdateJob from "./components/admincomponent/Updatejob";
 import AuditLogPage from "./components/admincomponent/AuditLogs";
-
+import { Toaster} from  "sonner";
 /* ----------------------------------
    GLOBAL AXIOS CONFIG
 ---------------------------------- */
 
-axios.defaults.withCredentials = true;
-axios.defaults.baseURL = "http://localhost:3000";
+
 
 function App() {
 
@@ -98,7 +98,8 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-900/80 to-purple-900/80 text-gray-100">
-
+      
+        <Toaster position="top-right" richColors />
       <Routes>
 
         {/* PUBLIC ROUTES */}
@@ -111,6 +112,7 @@ function App() {
 
         <Route path="/jobs" element={<Jobs />} />
         <Route path="/browse" element={<Browse />} />
+        <Route path="/Creator" element={<About />} />
 
         {/* ADMIN ROUTES */}
 
