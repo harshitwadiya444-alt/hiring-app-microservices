@@ -1,4 +1,5 @@
 import User from "../models/userModel.js";
+import {Company} from "../models/company.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import getDataUri from "../utils/datauri.js";
@@ -246,17 +247,25 @@ export const updateProfile = async (req, res) => {
   }
 };
 
-export const getCurrentUser = async(req ,res) =>{
-      try{
-          const user  = await User.findById(req.id).select("-password")
-           res.json({
-               success:true,
-               user
-           })
-      }catch(e){
-         console.log(e);
-      } 
-}
+
+
+export const getCurrentUser = async (req, res) => {
+  try {
+
+    const user = await User.findById(req.id).select("-password");
+
+    const company = await Company.findOne({ userId: req.id });
+
+    res.status(200).json({
+      success: true,
+      user,
+      company
+    });
+
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 export const forgotPassword = async (req, res) => {
   try {

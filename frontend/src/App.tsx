@@ -38,11 +38,8 @@ function App() {
   const user = useSelector((state) => state.auth?.user);
   const dispatch = useDispatch();
 
-  // console.log("Redux User:", user);
-
-  /* ----------------------------------
-     LOAD USER ON PAGE REFRESH
-  ---------------------------------- */
+  
+ 
 
   useEffect(() => {
 
@@ -50,12 +47,17 @@ function App() {
 
       try {
 
-        const res = await axios.get("http://localhost:4001/api/users/me");
+        const res = await axios.get("http://localhost:4001/api/users/me", {
+              withCredentials: true
+       });
 
         console.log("ME API RESPONSE:", res.data);
 
-        dispatch(setUser(res.data.user));
-
+         dispatch(setUser({
+         user: res.data.user,
+         company: res.data.company
+           
+    }));
       } catch (err) {
 
         console.log("User not logged in");
