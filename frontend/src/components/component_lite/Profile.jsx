@@ -24,21 +24,19 @@ const Profile = () => {
 
   const { user, company } = useSelector((store) => store.auth);
 
-  console.log(user);
-  console.log(company);
-
   const isRecruiter = user?.role?.toLowerCase() === "recruiter";
-
   const isResume = Boolean(user?.profile?.resume);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0f172a] via-[#312e81] to-[#6d28d9]">
+    <div className="min-h-screen bg-gradient-to-br from-[#0b1023] via-[#1e1b4b] to-[#4c1d95]">
 
       <Navbar />
 
-      <div className="max-w-4xl mx-auto mt-10 px-4">
+      <div className="max-w-4xl mx-auto mt-12 px-4">
 
-        <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-8 shadow-2xl">
+        {/* MAIN PROFILE CARD */}
+
+        <div className="bg-white/5 backdrop-blur-2xl border border-white/10 rounded-2xl p-8 shadow-2xl">
 
           {/* HEADER */}
 
@@ -46,7 +44,7 @@ const Profile = () => {
 
             <div className="flex items-center gap-6">
 
-              <Avatar className="h-24 w-24 ring-4 ring-indigo-500/40">
+              <Avatar className="h-24 w-24 ring-4 ring-indigo-500/40 shadow-lg">
                 <AvatarImage
                   src={
                     user?.profile?.profilePhoto ||
@@ -56,12 +54,12 @@ const Profile = () => {
               </Avatar>
 
               <div>
-                <h1 className="text-2xl font-bold text-white">
+                <h1 className="text-3xl font-bold text-white tracking-wide">
                   {user?.fullname}
                 </h1>
 
-                <p className="text-gray-300">
-                  {user?.profile?.bio || "No bio added"}
+                <p className="text-indigo-200 mt-1">
+                  {user?.profile?.bio || "No bio added yet"}
                 </p>
               </div>
 
@@ -69,117 +67,83 @@ const Profile = () => {
 
             <Button
               onClick={() => setOpen(true)}
-              className="bg-white/10 hover:bg-white/20 border border-white/20"
+              className="bg-indigo-600 hover:bg-indigo-700 text-white border-none"
             >
-              <Pen className="text-white" />
+              <Pen size={16}/>
             </Button>
 
           </div>
 
-          {/* RESUME STATUS (Candidate Only) */}
-
-          {!isRecruiter && (
-            <div className="my-6">
-
-              {!isResume ? (
-                <div className="flex items-start gap-3 p-4 rounded-xl bg-yellow-500/10 border border-yellow-400/40 text-yellow-200">
-                  <AlertTriangle />
-                  <div>
-                    <p className="font-semibold">
-                      Resume required before applying
-                    </p>
-                    <p className="text-sm text-yellow-100">
-                      Upload your resume to unlock job applications.
-                    </p>
-                  </div>
-                </div>
-              ) : (
-                <div className="flex items-start gap-3 p-4 rounded-xl bg-green-500/10 border border-green-400/40 text-green-200">
-                  <CheckCircle />
-                  <div>
-                    <p className="font-semibold">
-                      Resume uploaded successfully
-                    </p>
-                    <p className="text-sm text-green-100">
-                      Your profile is ready for recruiters.
-                    </p>
-                  </div>
-                </div>
-              )}
-
-            </div>
-          )}
-
           {/* CONTACT */}
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 my-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 my-8">
 
             <div className="flex items-center gap-3 text-gray-200">
-              <Mail />
-              <span>{user?.email}</span>
+              <Mail className="text-indigo-400"/>
+              <span className="font-medium">{user?.email}</span>
             </div>
 
             <div className="flex items-center gap-3 text-gray-200">
-              <Contact />
-              <span>{user?.phoneNumber}</span>
+              <Contact className="text-indigo-400"/>
+              <span className="font-medium">{user?.phoneNumber}</span>
             </div>
 
           </div>
 
           {/* SKILLS */}
 
-          <div className="my-6">
+          <div className="my-8">
 
-            <h2 className="text-lg font-semibold text-white mb-2">
+            <h2 className="text-xl font-semibold text-white mb-3">
               Skills
             </h2>
 
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-3">
 
               {user?.profile?.skills?.length > 0 ? (
                 user.profile.skills.map((skill, index) => (
                   <Badge
                     key={index}
-                    className="bg-indigo-500/20 text-indigo-200 border border-indigo-400/40"
+                    className="bg-indigo-600/20 text-indigo-200 border border-indigo-500/40 px-3 py-1 text-sm"
                   >
                     {skill}
                   </Badge>
                 ))
               ) : (
-                <span className="text-gray-400">NA</span>
+                <span className="text-gray-400">No skills added</span>
               )}
 
             </div>
 
           </div>
 
-          {/* COMPANY SECTION (Recruiter Only) */}
+          {/* COMPANY (Recruiter Only) */}
 
           {isRecruiter && (
 
-            <div className="my-6">
+            <div className="my-8">
 
-              <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                <Building2 size={18} />
+              <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
+                <Building2 className="text-indigo-400"/>
                 Company
               </h2>
 
               {company ? (
 
-                <div className="flex items-center gap-4 bg-white/10 p-4 rounded-xl">
+                <div className="flex items-center gap-5 bg-white/5 border border-white/10 p-5 rounded-xl">
 
                   <img
                     src={company.logo}
                     alt="company logo"
-                    className="h-12 w-12 rounded-lg object-cover"
+                    className="h-14 w-14 rounded-lg object-cover shadow-md"
                   />
 
                   <div>
-                    <p className="text-white font-semibold">
+                    <p className="text-lg font-semibold text-white">
                       {company.name}
                     </p>
 
-                    <p className="text-gray-400 text-sm">
+                    <p className="text-indigo-200 text-sm">
                       {company.location}
                     </p>
                   </div>
@@ -198,13 +162,13 @@ const Profile = () => {
 
           )}
 
-          {/* RESUME DOWNLOAD (Candidate Only) */}
+          {/* RESUME (Candidate Only) */}
 
           {!isRecruiter && (
 
-            <div className="my-6">
+            <div className="my-8">
 
-              <h2 className="text-lg font-semibold text-white mb-2">
+              <h2 className="text-xl font-semibold text-white mb-3">
                 Resume
               </h2>
 
@@ -214,7 +178,7 @@ const Profile = () => {
                   href={user.profile.resume}
                   target="_blank"
                   rel="noreferrer"
-                  className="text-indigo-300 hover:text-indigo-400 underline"
+                  className="text-indigo-400 hover:text-indigo-300 underline"
                 >
                   Download {user.profile.resumeOriginalName}
                 </a>
@@ -235,12 +199,15 @@ const Profile = () => {
 
       </div>
 
+      {/* APPLIED JOBS */}
+
       {!isRecruiter && (
-        <div className="max-w-4xl mx-auto mt-10 px-4 pb-20">
 
-          <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-6 shadow-xl">
+        <div className="max-w-4xl mx-auto mt-12 px-4 pb-20">
 
-            <h2 className="text-xl font-bold text-white mb-4">
+          <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-xl">
+
+            <h2 className="text-2xl font-bold text-white mb-4">
               Applied Jobs
             </h2>
 
@@ -249,6 +216,7 @@ const Profile = () => {
           </div>
 
         </div>
+
       )}
 
       <EditProfileModal open={open} setOpen={setOpen} />

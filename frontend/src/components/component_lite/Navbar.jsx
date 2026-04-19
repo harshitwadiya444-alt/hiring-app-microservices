@@ -11,6 +11,7 @@ import { setUser } from "@/redux/authSlice";
 import { USER_API_ENDPOINT } from "@/utils/data";
 
 const Navbar = () => {
+
   const { user } = useSelector((store) => store.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -18,74 +19,104 @@ const Navbar = () => {
   const [notifications, setNotifications] = useState([]);
   const [showNotifications, setShowNotifications] = useState(false);
 
+  const role = user?.role?.toLowerCase();
+
   useEffect(() => {
+
     if (!user) return;
 
     fetch(`http://localhost:4004/api/notifications/${user._id}`)
       .then((res) => res.json())
       .then((data) => setNotifications(data))
       .catch((err) => console.log(err));
+
   }, [user]);
 
   const logoutHandler = async () => {
+
     try {
+
       const res = await axios.get(`${USER_API_ENDPOINT}/logout`, {
         withCredentials: true,
       });
 
       if (res?.data?.success) {
+
         dispatch(setUser(null));
         navigate("/");
         toast.success(res.data.message);
+
       }
+
     } catch (error) {
+
       toast.error("Error logging out. Please try again.");
+
     }
+
   };
 
   return (
-    <div
-      className="
+
+    <div className="
       sticky top-0 z-50
       bg-gradient-to-r from-[#14162e] via-[#2c2f6c] to-[#4b46a6]
       backdrop-blur-md
       border-b border-white/10
-    "
-    >
+    ">
+
       <div className="flex items-center justify-between mx-auto max-w-7xl h-16 px-4">
+
+        {/* LOGO */}
+
         <h1 className="text-2xl font-bold tracking-wide text-white">
           Hire<span className="text-indigo-300">Flow</span>
         </h1>
 
         <div className="flex items-center gap-10">
+
+          {/* NAVIGATION */}
+
           <ul className="flex font-medium items-center gap-6 text-white/80">
-            <li>
-              <Link to="/Home" className="hover:text-white transition">
-                Home
-              </Link>
-            </li>
+
+            {/* Student Navigation */}
+
+            {role !== "recruiter" && (
+              <>
+                <li>
+                  <Link to="/home" className="hover:text-white transition">
+                    Home
+                  </Link>
+                </li>
+
+                <li>
+                  <Link to="/browse" className="hover:text-white transition">
+                    Browse
+                  </Link>
+                </li>
+
+                <li>
+                  <Link to="/jobs" className="hover:text-white transition">
+                    Jobs
+                  </Link>
+                </li>
+              </>
+            )}
+
+            {/* Visible for both */}
 
             <li>
-              <Link to="/Browse" className="hover:text-white transition">
-                Browse
-              </Link>
-            </li>
-
-            <li>
-              <Link to="/Jobs" className="hover:text-white transition">
-                Jobs
-              </Link>
-            </li>
-
-            <li>
-              <Link to="/Creator" className="hover:text-white transition">
+              <Link to="/creator" className="hover:text-white transition">
                 About
               </Link>
             </li>
+
           </ul>
 
           {!user ? (
+
             <div className="flex items-center gap-3">
+
               <Link to="/login">
                 <Button className="bg-white/10 text-white border border-white/30 hover:bg-white/20">
                   Login
@@ -97,9 +128,15 @@ const Navbar = () => {
                   Register
                 </Button>
               </Link>
+
             </div>
+
           ) : (
+
             <div className="flex items-center gap-6 relative">
+
+              {/* NOTIFICATIONS */}
+
               <div
                 className="relative cursor-pointer"
                 onClick={() => setShowNotifications(!showNotifications)}
@@ -107,22 +144,20 @@ const Navbar = () => {
                 <Bell size={22} className="text-white" />
 
                 {notifications.length > 0 && (
-                  <span
-                    className="
+                  <span className="
                     absolute -top-2 -right-2
                     bg-red-500 text-white
                     text-xs rounded-full
                     px-1
-                  "
-                  >
+                  ">
                     {notifications.length}
                   </span>
                 )}
               </div>
 
               {showNotifications && (
-                <div
-                  className="
+
+                <div className="
                   absolute right-16 top-12
                   w-80
                   bg-gradient-to-br from-[#1e1f3f] to-[#2e2f6e]
@@ -133,8 +168,8 @@ const Navbar = () => {
                   p-4
                   text-white
                   z-50
-                "
-                >
+                ">
+
                   <h3 className="font-semibold text-lg mb-3 text-indigo-300">
                     Notifications
                   </h3>
@@ -164,18 +199,22 @@ const Navbar = () => {
                       ))}
                     </div>
                   )}
+
                 </div>
+
               )}
 
+              {/* USER MENU */}
+
               <Popover>
+
                 <PopoverTrigger asChild>
                   <Avatar className="cursor-pointer ring-2 ring-indigo-400">
                     <AvatarImage src={user?.profile?.profilePhoto} />
                   </Avatar>
                 </PopoverTrigger>
 
-                <PopoverContent
-                  className="
+                <PopoverContent className="
                   w-64
                   bg-gradient-to-br from-[#1e1f3f] to-[#2e2f6e]
                   border border-white/10
@@ -184,22 +223,21 @@ const Navbar = () => {
                   rounded-xl
                   p-3
                   backdrop-blur-xl
-                "
-                >
+                ">
+
                   <div className="flex flex-col gap-2">
-                    <Link to="/Profile">
-                      <button
-                        className="
+
+                    <Link to="/profile">
+                      <button className="
                         flex items-center gap-3
                         w-full px-4 py-2.5
                         rounded-lg
                         text-white font-medium
                         hover:bg-indigo-500/30
                         transition
-                      "
-                      >
+                      ">
                         <User2 size={18} className="text-indigo-300" />
-                        <span className="tracking-wide">Profile</span>
+                        Profile
                       </button>
                     </Link>
 
@@ -215,20 +253,29 @@ const Navbar = () => {
                       text-red-400
                       hover:bg-red-500/20
                       transition
-                    "
-                    >
+                    ">
                       <LogOut size={18} className="text-red-400" />
-                      <span className="tracking-wide">Logout</span>
+                      Logout
                     </button>
+
                   </div>
+
                 </PopoverContent>
+
               </Popover>
+
             </div>
+
           )}
+
         </div>
+
       </div>
+
     </div>
+
   );
+
 };
 
 export default Navbar;

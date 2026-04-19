@@ -38,9 +38,6 @@ function App() {
   const user = useSelector((state) => state.auth?.user);
   const dispatch = useDispatch();
 
-  
- 
-
   useEffect(() => {
 
     const loadUser = async () => {
