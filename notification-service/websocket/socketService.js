@@ -4,7 +4,7 @@ export const sendSocketNotification = ({userId,message})=>{
 
   const io = getIO();
 
-  io.to(userId).emit("notification",{
+  io.to(userId).emit("notification",{  
     message
   });
 
