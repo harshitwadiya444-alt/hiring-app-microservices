@@ -45,9 +45,18 @@ const Login = () => {
       );
 
       if (res.data.success) {
-        dispatch(setUser(res.data.user));
+      dispatch(
+         setUser({
+          user: res.data.user,
+           company: res.data.company || null,
+          })
+          );
         toast.success(res.data.message);
-        navigate("/");
+        if (res.data.user.role === "Recruiter") {
+            navigate("/admin/companies"); // ya recruiter dashboard
+             } else {
+               navigate("/");
+          }
       }
 
     } catch (error) {
