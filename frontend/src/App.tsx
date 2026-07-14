@@ -27,6 +27,8 @@ import RecruiterDashboardWrapper from "./components/component_lite/RecruiterDash
 import UpdateJob from "./components/admincomponent/Updatejob";
 import AuditLogPage from "./components/admincomponent/AuditLogs";
 import { Toaster} from  "sonner";
+import { useState } from "react";
+import { Navigate } from "react-router-dom";
 /* ----------------------------------
    GLOBAL AXIOS CONFIG
 ---------------------------------- */
@@ -36,36 +38,36 @@ import { Toaster} from  "sonner";
 function App() {
 
   const user = useSelector((state) => state.auth?.user);
+  const [authLoading, setAuthLoading] = useState(true);
   const dispatch = useDispatch();
 
-  useEffect(() => {
+ useEffect(() => {
+  const loadUser = async () => {
+    try {
+      const res = await axios.get(
+        "http://localhost:4001/api/users/me",
+        {
+          withCredentials: true,
+        }
+      );
 
-    const loadUser = async () => {
+      console.log("ME API RESPONSE:", res.data);
 
-      try {
+      dispatch(
+        setUser({
+          user: res.data.user,
+          company: res.data.company,
+        })
+      );
+    } catch (err) {
+      console.log("User not logged in");
+    } finally {
+      setAuthLoading(false);
+    }
+  };
 
-        const res = await axios.get("http://localhost:4001/api/users/me", {
-              withCredentials: true
-       });
-
-        console.log("ME API RESPONSE:", res.data);
-
-         dispatch(setUser({
-         user: res.data.user,
-         company: res.data.company
-           
-    }));
-      } catch (err) {
-
-        console.log("User not logged in");
-
-      }
-
-    };
-
-    loadUser();
-
-  }, [dispatch]);
+  loadUser();
+}, [dispatch]);
 
   /* ----------------------------------
      SOCKET CONNECTION
@@ -95,16 +97,44 @@ function App() {
 
   }, [user]);
 
+
+  if (authLoading) {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-slate-900 text-white text-2xl">
+      Loading...
+    </div>
+  );
+}
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-900/80 to-purple-900/80 text-gray-100">
       
         <Toaster position="top-right" richColors />
-      <Routes>
+        <Routes>
 
         {/* PUBLIC ROUTES */}
 
-        <Route path="/" element={<Home />} />
-        <Route path="/home" element={<Home />} />
+       <Route
+          path="/"
+          element={
+           user?.role === "Recruiter" ? (
+           <Navigate to="/admin/companies" replace />
+             ) : (
+           <Home />
+         )
+       }
+       />
+       
+        <Route
+         path="/home"
+         element={
+         user?.role === "Recruiter" ? (
+         <Navigate to="/admin/companies" replace />
+          ) : (
+         <Home />
+        )
+       }
+        />
 
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
